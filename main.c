@@ -7,6 +7,8 @@
 
 struct termios orig_termios;
 
+#define CTRL_KEY(k) ((k) & 0x1f)
+
 void die(const char *s) {
     perror(s);
     exit(1);
@@ -53,7 +55,7 @@ int main(void) {
             printf("%d ('%c')\r\n", c, c);
         }
 
-        if (c == 'q') {
+        if (c == CTRL_KEY('q')) {
             break;
         }
     }
