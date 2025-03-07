@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <errno.h>
+#include <stdatomic.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +10,7 @@
 
 // defines
 #define CTRL_KEY(k) ((k) & 0x1f)
+#define TEXTED_VERSION "0.1"
 
 // data
 struct editorConfig {
@@ -145,7 +147,28 @@ void abFree(struct abuf *ab) {
 // output
 void editorDrawRows(struct abuf *ab) {
     for (int y = 0; y < E.screenrows; y++) {
-        abAppend(ab, "~", 1);
+        if (y == E.screenrows / 3) {
+            char welcome[80];
+            int welcomeLength = snprintf(welcome, sizeof(welcome), "Texted - version %s", TEXTED_VERSION);
+
+            if (welcomeLength > E.screencols) {
+                welcomeLength = E.screencols;
+            }
+
+            int padding = (E.screencols - welcomeLength) / 2;
+            if (padding) { 
+                abAppend(ab, "~", 1);
+                padding--;
+            }
+
+            while (padding--) {
+                abAppend(ab, " ", 1);
+            }
+
+            abAppend(ab, welcome, welcomeLength);
+        } else {
+            abAppend(ab, "~", 1);
+        }
 
         abAppend(ab, "\x1b[K", 3);
         if (y < E.screenrows - 1) {
