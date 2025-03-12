@@ -17,6 +17,7 @@ enum editorKey {
     ARROW_RIGHT,
     ARROW_UP,
     ARROW_DOWN,
+    DEL_KEY,
     PAGE_UP,
     PAGE_DOWN
 };
@@ -95,6 +96,8 @@ int editorReadKey() {
                 }
                 if (seq[2] == '~') {
                     switch (seq[1]) {
+                        case '3':
+                            return DEL_KEY;
                         case '5':
                             return PAGE_UP;
                         case '6':
